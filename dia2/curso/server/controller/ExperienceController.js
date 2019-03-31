@@ -1,15 +1,33 @@
 // server/controller/ExperienceController.js
 
 const repository = require('../repository/ExperienceRepository')
+const redis = require('../config/redis')
+
 
 const ExperienceController = {
 	list(request, response, next) {
 		repository.listAsync()
 			.then(data => {
+				redis.setAsync('agarcia:list', JSON.stringify(data))
+					.catch(err => console.log(err))
+				console.log('list from database')
 				response.json(data)
 			})
 			.catch(next)
 	},
+
+	listFromCache(request, response, next) {
+		redis.getAsync('agarcia:list')
+			.then(result => {
+				if(!result) return next()
+
+				let data = JSON.parse(result);
+				console.log('list from cache')
+				response.json(data)
+			})
+			.catch(err => next())
+	},
+
 	byId(request, response, next) {
 		const id = request.params.id
 		repository.byIdAsync(id)

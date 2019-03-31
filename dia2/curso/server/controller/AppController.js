@@ -12,7 +12,7 @@ const AppController = {
 	handleError(err, request, response, next){
 		let status = err.status || 500
 
-		if (response.status != 404) console.log(err.stack)
+		if (response.status !== 404) console.log(err.stack)
 
 		response.status(status)
 		response.json({ message: err.message })

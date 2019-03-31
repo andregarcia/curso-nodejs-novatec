@@ -11,7 +11,7 @@ router.get('/novatec', (request, response, next) => {
 });
 
 
-router.get('/experiences', XPController.list)
+router.get('/experiences', XPController.listFromCache, XPController.list)
 
 router.post('/experiences', XPController.create)
 
